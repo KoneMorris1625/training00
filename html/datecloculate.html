@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<main class="main">
+			<div class="container">
+				<input type="datetime-local" class="currentTime" value="" />
+				<input type="text" class="breakTime" />
+				<input type="datetime-local" class="futureTime" value="" />
+				<a class="button" href="javascript:void(0)">算一下</a>
+			</div>
+		</main>
+		<script>
+			// 静态倒计时效果   00天00时00分00秒
+			// 倒计时效果
+			// 1.核心算法:输入的时间减去现在的时间就是剩余的时间，即倒计时，但是不能拿着时分秒相减，比如 05分减去25分，结果会是负数的。
+			// 2.用时间戳来做。用户输入时间总的毫秒数减去现在时间的总的毫秒数，得到的就是剩余时间的毫秒数。
+			// 3.把剩余时间总的毫秒数转换为天、时、分、秒(时间戳转换为时分秒)
+			// 转换公式如下:
+			// d=parseInt(总秒数/60/60/24); // 计算天数
+			// h=parseInt(总秒数/60/60%24) // 计算小时
+			// m=parseInt(总秒数/60 %60); 计算分数
+			// s=parseInt(总秒数%60); // 计算当前秒数
+			function formatDates(items) {
+				return items < 0 ? "0" + items : items;
+			}
+
+			function countDown() {
+				let breakTime = document.querySelector(".breakTime");
+				let currentTime = document.querySelector(".currentTime");
+				currentTime = +new Date(currentTime.value);
+				let futureTime = document.querySelector(".futureTime");
+				futureTime = +new Date(futureTime.value);
+				// 1.
+				let targetTime = new Date(futureTime).format("yyyy-MM-dd");
+				let midTime = futureTime - currentTime;
+
+				let days = parseInt(midTime / 1000 / 60 / 60 / 24);
+				days = formatDates(days);
+				let hours = parseInt((midTime / 1000 / 60 / 60) % 24);
+				hours = formatDates(hours);
+				let minutes = parseInt((midTime / 1000 / 60) % 60);
+				minutes = formatDates(minutes);
+				let seconds = formatDates(parseInt((midTime / 1000) % 60));
+				breakTime.value =
+					"距离" +
+					targetTime +
+					": " +
+					days +
+					"天" +
+					hours +
+					"时" +
+					minutes +
+					"分" +
+					seconds +
+					"秒";
+				// console.log(
+				// 	"距离现在: " +
+				// 		days +
+				// 		"天" +
+				// 		hours +
+				// 		"时" +
+				// 		minutes +
+				// 		"分" +
+				// 		seconds +
+				// 		"秒"
+				// );
+			}
+
+			let button = document.querySelector(".button");
+			// button.onclick = countDown(e);
+			button.addEventListener("click", countDown);
+		</script>
+	</body>
+</html>
